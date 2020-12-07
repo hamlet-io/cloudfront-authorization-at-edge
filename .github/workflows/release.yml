@@ -54,10 +54,16 @@ jobs:
           draft: false
           prerelease: false
 
+      - id: get-tag-name
+        run: |
+          tag_ref="${{github.ref}}"
+          tag_name=$(echo "${tag_ref##*/}"" )
+          echo "::set-output name=tag_name::$tag_name"
+
       - name: Upload Tag Release Asset
-        id: upload_tag_release_asset
+        id: upload_tag_release_assets
         uses: AButler/upload-release-assets@v2.0
         with:
           files: '.aws-sam/build/*.zip'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          release-tag: ${{ github.ref }}
+          release-tag: ${{steps.get-tag-name.outputs.tag_name}}
