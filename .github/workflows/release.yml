@@ -54,10 +54,11 @@ jobs:
           draft: false
           prerelease: false
 
-      - id: get-tag-name
+      - name: Get tag name
+        id: get-tag-name
         run: |
           tag_ref="${{github.ref}}"
-          tag_name=$(echo "${tag_ref##*/}"" )
+          tag_name="$(echo "${tag_ref##*/}" )"
           echo "::set-output name=tag_name::$tag_name"
 
       - name: Upload Tag Release Asset
