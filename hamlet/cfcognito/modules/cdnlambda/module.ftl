@@ -26,12 +26,12 @@
         {
             "Names" : "originLink",
             "Description" : "The link to the origin for the CDN",
-            "Children" : linkChildrenConfiguration
+            "AttributeSet" : LINK_ATTRIBUTESET_TYPE
         },
         {
             "Names" : "userpoolClientLink",
             "Description" : "A link to a cognito Client for the CDN to use",
-            "Children" : linkChildrenConfiguration
+            "AttributeSet" : LINK_ATTRIBUTESET_TYPE
         },
         {
             "Names" : "artefactBaseUrl",
