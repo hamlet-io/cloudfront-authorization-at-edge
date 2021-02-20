@@ -70,6 +70,13 @@
     [#local cdnDeploymentUnit = formatName(id, "cdn") ]
 
     [#local fakeOriginName = concatenate( [ id, "fake", "origin" ], "")]
+
+    [#local fakeOriginLink = {
+        "Tier" : tier,
+        "Component" : fakeOriginName,
+        "Instance" : instance
+    }]
+
     [#local cdnAuthName = concatenate( [id, "auth" ], "")]
 
     [#local lambdaCDNUnit = formatName( id, "lmb" ) ]
@@ -105,6 +112,7 @@
             lambdaDetail.Name : {
                 "Tier" : tier,
                 "Component" : concatenate([id, lambdaDetail.Name], "" ),
+                "Instance" : instance,
                 "Function" : "event"
             }
         }]
@@ -119,7 +127,7 @@
                 },
                 "Functions" : {
                     "update" : {
-                        "Extensions" : [ "_noenv", "cfcog_lambdaupdater" ],
+                        "Extensions" : [ "_noenv", "_cfcog_lambdaupdater" ],
                         "Handler" : "index.handler",
                         "RunTime" : "nodejs12.x",
                         "MemorySize": 256,
@@ -286,10 +294,7 @@
                                     "redirectPath" : {
                                         "PathPattern" : "/parseauth",
                                         "Origin" : {
-                                            "Link" : {
-                                                "Tier" : tier,
-                                                "Component" : fakeOriginName
-                                            }
+                                            "Link" : fakeOriginLink
                                         },
                                         "EventHandlers" : {
                                             "parse"  :
@@ -301,10 +306,7 @@
                                     "refreshAuth" : {
                                         "PathPattern" : "/refreshauth",
                                         "Origin" : {
-                                            "Link" : {
-                                                "Tier" : tier,
-                                                "Component" : fakeOriginName
-                                            }
+                                            "Link" : fakeOriginLink
                                         },
                                         "EventHandlers" : {
                                             "refresh"  : lambdaCDNLinks["refresh"] + {
@@ -315,10 +317,7 @@
                                     "signOut" : {
                                         "PathPattern" : "/signout",
                                         "Origin" : {
-                                            "Link" : {
-                                                "Tier" : tier,
-                                                "Component" : fakeOriginName
-                                            }
+                                            "Link" : fakeOriginLink
                                         },
                                         "EventHandlers" : {
                                             "signout" : lambdaCDNLinks["signout"] + {

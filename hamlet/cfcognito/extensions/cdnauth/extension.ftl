@@ -31,8 +31,8 @@
         [#local callBackUrls += [ formatRelativePath(linkUrl, redirectPathSignIn) ]]
         [#local logoutUrls += [ formatRelativePath(linkUrl, redirectPathSignOut) ]]
     [#else]
-        [#local callBackUrls += [ "https://placeholder" ] ]
-        [#local logoutUrls += [ "https://placeholder" ] ]
+        [#local callBackUrls += [ "https://placeholder_${occurrence.Core.Id}" ] ]
+        [#local logoutUrls += [ "https://placeholder_${occurrence.Core.Id}" ] ]
     [/#if]
 
     [@Settings
