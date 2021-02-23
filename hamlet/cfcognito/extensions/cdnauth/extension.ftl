@@ -23,8 +23,8 @@
     [#local callBackUrls = []]
     [#local logoutUrls = []]
 
-    [#local redirectPathSignIn = (_context.DefaultEnvironment["REDIRECTPATHSIGNIN"])!"" ]
-    [#local redirectPathSignOut = (_context.DefaultEnvironment["REDIRECTPATHSIGNOUT"])!"" ]
+    [#local redirectPathSignIn = "parseauth" ]
+    [#local redirectPathSignOut = "signout" ]
 
     [#if _context.Links["cdn"]?has_content ]
         [#local linkUrl = _context.Links["cdn"].State.Attributes["URL"] ]
