@@ -44,6 +44,19 @@
             "Description" : "The version of the artefacts to use",
             "Type" : STRING_TYPE,
             "Default" : "v0.0.3"
+        },
+        {
+            "Names" : "enableSPAMode",
+            "Description" : "Configure the module to work with SPAs behind the CDN",
+            "Type" : BOOLEAN_TYPE,
+            "Default" : false
+        },
+        {
+            "Names" : "cookieCompatibility",
+            "Description" : "Configure how cookies are provided - elasticsearch is a speical requirement",
+            "Type" : STRING_TYPE,
+            "Values" : [ "amplify", "elasticsearch" ],
+            "Default" : "amplify"
         }
     ]
 /]
@@ -56,6 +69,8 @@
         userpoolClientLink
         artefactBaseUrl
         artefactVersion
+        enableSPAMode
+        cookieCompatibility
  ]
 
     [#local product = getActiveLayer(PRODUCT_LAYER_TYPE) ]
@@ -78,6 +93,8 @@
     }]
 
     [#local cdnAuthName = concatenate( [id, "auth" ], "")]
+
+    [#local spaMode = enableSPAMode?then("spaMode", "staticSiteMode") ]
 
     [#local lambdaCDNUnit = formatName( id, "lmb" ) ]
     [#local lambdaCDNDetails = [
@@ -248,12 +265,12 @@
                         }
                     },
                     "logLevel" : "none",
-                    "cookieCompatibility" : "amplify",
+                    "cookieCompatibility" : cookieCompatibility,
                     "additionalCookies" : {
                         "Value" : {}
                     },
                     "userPoolGroupName" : "",
-                    "mode" : "staticSiteMode",
+                    "mode" : spaMode,
                     "redirectPathSignIn" : "/parseauth",
                     "redirectPathSignOut" : "/",
                     "redirectPathAuthRefresh" : "/refreshauth"
