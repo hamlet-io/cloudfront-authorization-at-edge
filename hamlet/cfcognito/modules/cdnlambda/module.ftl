@@ -143,23 +143,25 @@
                     instance : {
                         "Functions" : {
                             "update" : {
-                                "Extensions" : [ "_noenv", "_cfcog_lambdaupdater" ],
-                                "Handler" : "index.handler",
-                                "RunTime" : "nodejs12.x",
-                                "MemorySize": 256,
-                                "Timeout": 300,
-                                "VPCAccess" : false,
-                                "PredefineLogGroup" : false,
-                                "Permissions": {
-                                    "Decrypt": false,
-                                    "AsFile": false,
-                                    "AppData": false,
-                                    "AppPublic": false
-                                },
-                                "Links" :
-                                    lambdaCDNLinks
-
+                                "Links" : lambdaCDNLinks
                             }
+                        }
+                    }
+                },
+                "Functions" : {
+                    "update" : {
+                        "Extensions" : [ "_noenv", "_cfcog_lambdaupdater" ],
+                        "Handler" : "index.handler",
+                        "RunTime" : "nodejs12.x",
+                        "MemorySize": 256,
+                        "Timeout": 300,
+                        "VPCAccess" : false,
+                        "PredefineLogGroup" : false,
+                        "Permissions": {
+                            "Decrypt": false,
+                            "AsFile": false,
+                            "AppData": false,
+                            "AppPublic": false
                         }
                     }
                 },
@@ -188,50 +190,56 @@
                         instance : {
                             "Functions" : {
                                 "event" : {
-                                    "DeploymentType": "EDGE",
-                                    "Handler" : "bundle.handler",
-                                    "Extensions" : [ "_noenv", "_cfcog_edge_config_" + lambdaDetail.Name ],
-                                    "RunTime" : "nodejs12.x",
-                                    "MemorySize": 128,
-                                    "Timeout": 5,
-                                    "VPCAccess" : false,
-                                    "PredefineLogGroup" : false,
-                                    "FixedCodeVersion" : {
-                                        "Enabled" : true,
-                                        "NewVersionOnDeploy" : true
-                                    },
-                                    "Permissions": {
-                                        "Decrypt": false,
-                                        "AsFile": false,
-                                        "AppData": false,
-                                        "AppPublic": false
-                                    },
                                     "Links" : {
-                                        "updater" : {
-                                            "Tier" : tier,
-                                            "Component" : lambdaUpdaterName,
-                                            "Function" : "update",
-                                            "Role" : "none"
-                                        },
                                         "userpoolClient" : userpoolClientLink
-                                    },
-                                    "Profiles" : {
-                                        "Placement" : "global"
-                                    },
-                                    "SettingNamespaces" : {
-                                        "base" : {
-                                            "Name" : edgeSettingsNamespace,
-                                            "Match" : "partial",
-                                            "IncludeInNamespace" : {
-                                                "Tier" : false,
-                                                "Component" : false,
-                                                "Type" : false,
-                                                "SubComponent" : false,
-                                                "Instance" : true,
-                                                "Version" : false,
-                                                "Name" : true
-                                            }
-                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    "Functions" : {
+                        "event" : {
+                            "DeploymentType": "EDGE",
+                            "Handler" : "bundle.handler",
+                            "Extensions" : [ "_noenv", "_cfcog_edge_config_" + lambdaDetail.Name ],
+                            "RunTime" : "nodejs12.x",
+                            "MemorySize": 128,
+                            "Timeout": 5,
+                            "VPCAccess" : false,
+                            "PredefineLogGroup" : false,
+                            "FixedCodeVersion" : {
+                                "Enabled" : true,
+                                "NewVersionOnDeploy" : true
+                            },
+                            "Permissions": {
+                                "Decrypt": false,
+                                "AsFile": false,
+                                "AppData": false,
+                                "AppPublic": false
+                            },
+                            "Links" : {
+                                "updater" : {
+                                    "Tier" : tier,
+                                    "Component" : lambdaUpdaterName,
+                                    "Function" : "update",
+                                    "Role" : "none"
+                                }
+                            },
+                            "Profiles" : {
+                                "Placement" : "global"
+                            },
+                            "SettingNamespaces" : {
+                                "base" : {
+                                    "Name" : edgeSettingsNamespace,
+                                    "Match" : "partial",
+                                    "IncludeInNamespace" : {
+                                        "Tier" : false,
+                                        "Component" : false,
+                                        "Type" : false,
+                                        "SubComponent" : false,
+                                        "Instance" : true,
+                                        "Version" : false,
+                                        "Name" : true
                                     }
                                 }
                             }
@@ -294,53 +302,54 @@
                                         },
                                         "Routes" : {
                                             "default" : {
-                                                "PathPattern" : "_default",
-                                                "Origin" : {
-                                                    "Link" : originLink
+                                                    "PathPattern" : "_default",
+                                                    "Origin" : {
+                                                        "Link" : originLink
+                                                    },
+                                                    "EventHandlers" : {
+                                                        "check"  :
+                                                            lambdaCDNLinks["check"] + {
+                                                                "Action" : "viewer-request"
+                                                            },
+                                                        "headers"  :
+                                                            lambdaCDNLinks["headers"] + {
+                                                                "Action" : "origin-response"
+                                                            }
+                                                    }
                                                 },
-                                                "EventHandlers" : {
-                                                    "check"  :
-                                                        lambdaCDNLinks["check"] + {
-                                                            "Action" : "viewer-request"
-                                                        },
-                                                    "headers"  :
-                                                        lambdaCDNLinks["headers"] + {
-                                                            "Action" : "origin-response"
-                                                        }
-                                                }
-                                            },
-                                            "redirectPath" : {
-                                                "PathPattern" : "/parseauth",
-                                                "Origin" : {
-                                                    "Link" : fakeOriginLink
+                                                "redirectPath" : {
+                                                    "PathPattern" : "/parseauth",
+                                                    "Origin" : {
+                                                        "Link" : fakeOriginLink
+                                                    },
+                                                    "EventHandlers" : {
+                                                        "parse"  :
+                                                            lambdaCDNLinks["parse"] + {
+                                                                "Action" : "viewer-request"
+                                                            }
+                                                    }
                                                 },
-                                                "EventHandlers" : {
-                                                    "parse"  :
-                                                        lambdaCDNLinks["parse"] + {
-                                                            "Action" : "viewer-request"
-                                                        }
-                                                }
-                                            },
-                                            "refreshAuth" : {
-                                                "PathPattern" : "/refreshauth",
-                                                "Origin" : {
-                                                    "Link" : fakeOriginLink
+                                                "refreshAuth" : {
+                                                    "PathPattern" : "/refreshauth",
+                                                    "Origin" : {
+                                                        "Link" : fakeOriginLink
+                                                    },
+                                                    "EventHandlers" : {
+                                                        "refresh"  : lambdaCDNLinks["refresh"] + {
+                                                                "Action" : "viewer-request"
+                                                            }
+                                                    }
                                                 },
-                                                "EventHandlers" : {
-                                                    "refresh"  : lambdaCDNLinks["refresh"] + {
-                                                            "Action" : "viewer-request"
-                                                        }
-                                                }
-                                            },
-                                            "signOut" : {
-                                                "PathPattern" : "/signout",
-                                                "Origin" : {
-                                                    "Link" : fakeOriginLink
-                                                },
-                                                "EventHandlers" : {
-                                                    "signout" : lambdaCDNLinks["signout"] + {
-                                                            "Action" : "viewer-request"
-                                                        }
+                                                "signOut" : {
+                                                    "PathPattern" : "/signout",
+                                                    "Origin" : {
+                                                        "Link" : fakeOriginLink
+                                                    },
+                                                    "EventHandlers" : {
+                                                        "signout" : lambdaCDNLinks["signout"] + {
+                                                                "Action" : "viewer-request"
+                                                            }
+                                                    }
                                                 }
                                             }
                                         }
