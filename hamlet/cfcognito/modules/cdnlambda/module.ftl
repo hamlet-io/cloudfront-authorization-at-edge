@@ -19,7 +19,7 @@
         },
         {
             "Names" : "instance",
-            "Description" : "The instance id of the CDB to create",
+            "Description" : "The instance id of the CDN to create",
             "Type" : STRING_TYPE,
             "Default" : "default"
         },
