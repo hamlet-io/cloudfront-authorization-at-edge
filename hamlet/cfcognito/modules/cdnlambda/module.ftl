@@ -7,19 +7,19 @@
     properties=[
         {
             "Names" : "id",
-            "Description" : "The Id of this CDN instance",
+            "Description" : "The Id of the primary CDN",
             "Type" : STRING_TYPE,
             "Mandatory" : true
         },
         {
             "Names" : "tier",
-            "Description" : "The Id of this CDN instance",
+            "Description" : "The Id of the primary CDN tier",
             "Type" : STRING_TYPE,
             "Mandatory" : true
         },
         {
             "Names" : "instance",
-            "Description" : "The id of the instance to create",
+            "Description" : "The instance of the lambda functions",
             "Type" : STRING_TYPE,
             "Default" : "default"
         },
@@ -130,6 +130,7 @@
                 "Tier" : tier,
                 "Component" : concatenate([id, lambdaDetail.Name], "" ),
                 "Instance" : instance,
+                "Version" : "",
                 "Function" : "event"
             }
         }]
@@ -210,6 +211,8 @@
                                 "updater" : {
                                     "Tier" : tier,
                                     "Component" : lambdaUpdaterName,
+                                    "Instance" : instance,
+                                    "Version" : "",
                                     "Function" : "update",
                                     "Role" : "none"
                                 },
