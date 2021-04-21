@@ -15,6 +15,8 @@ Authentication sessions are stored in cookies and if not present the user will b
 
 You can combine this plugin with the [Github IDP module](https://github.com/gs-gs/github-idp/blob/master/hamlet/githubidp/README.md) to enable Github Auth on the distributions
 
+This combination is also covered on the hamlet blog - https://docs.hamlet.io/blog/2021/02/10/static-sites-with-github-authentication-made-easy
+
 ## Usage
 
 1. In your segment file install the plugin - Update the Ref based on the version you want to install. The AWS plugin is also required
